@@ -1,1 +1,5 @@
-{}
+{
+  "buildCommand": "",
+  "outputDirectory": "",
+  "devCommand": "node local-server.js"
+}
