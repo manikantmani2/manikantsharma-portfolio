@@ -1,20 +1,25 @@
 {
   "buildCommand": "npm install",
   "outputDirectory": ".",
-  "framework": "express",
-  "rewrites": [
+  "headers": [
     {
       "source": "/(.*)",
-      "destination": "/"
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600"
+        }
+      ]
     }
   ],
-  "functions": {
-    "server.js": {
-      "runtime": "nodejs18.x"
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
-  },
-  "env": {
-    "EMAIL_USER": "@example.com",
-    "EMAIL_PASS": "your-app-password"
-  }
+  ]
 }
