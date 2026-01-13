@@ -1,16 +1,30 @@
-import nodemailer from 'nodemailer';
+// Use CommonJS for Vercel Node runtime
+const nodemailer = require('nodemailer');
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   // Only allow POST requests
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { name, email, phone, message } = req.body;
+  // Handle both parsed and raw JSON bodies
+  let payload = req.body || {};
+  if (typeof payload === 'string') {
+    try {
+      payload = JSON.parse(payload || '{}');
+    } catch (err) {
+      return res.status(400).json({ error: 'Invalid JSON payload' });
+    }
+  }
+  const { name, email, phone, message } = payload;
 
   // Validate required fields
   if (!name || !email || !message) {
     return res.status(400).json({ error: 'Missing required fields' });
+  }
+
+  if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) {
+    return res.status(500).json({ error: 'Email service not configured. Please set GMAIL_USER and GMAIL_APP_PASSWORD.' });
   }
 
   try {
