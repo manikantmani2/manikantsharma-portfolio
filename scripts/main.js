@@ -113,7 +113,12 @@ form?.addEventListener('submit', async event => {
   formStatus.style.color = 'var(--accent)';
 
   try {
-    const response = await fetch('http://localhost:5173/api/contact', {
+    // Use relative URL - works on both localhost and production
+    const apiUrl = window.location.hostname === 'localhost' 
+      ? 'http://localhost:3000/api/contact'
+      : '/api/contact';
+    
+    const response = await fetch(apiUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
