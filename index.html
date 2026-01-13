@@ -11,8 +11,11 @@
   <link rel="stylesheet" href="styles/main.css" />
   <!-- Vercel Web Analytics -->
   <script defer src="https://cdn.vercel-analytics.com/v1/web.js"></script>
-  <!-- Vercel Speed Insights -->
-  <script defer src="https://cdn.jsdelivr.net/npm/@vercel/analytics@latest/dist/analytics.min.js"></script>
+  <!-- Vercel Speed Insights Script -->
+  <script>
+    window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/speed-insights/script.js"></script>
 </head>
 <body>
   <div class="bg-grid"></div>
