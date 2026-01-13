@@ -113,13 +113,22 @@ form?.addEventListener('submit', async event => {
   formStatus.style.color = 'var(--accent)';
 
   try {
-    // Simulate sending for portfolio display
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
+    const response = await fetch('/api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, phone, message })
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
     formStatus.textContent = 'Message sent successfully! I\'ll get back to you soon.';
     formStatus.style.color = 'var(--accent)';
     form.reset();
   } catch (error) {
+    console.error('Form submission error:', error);
     formStatus.textContent = 'Network error. Please check your connection and try again.';
     formStatus.style.color = '#ff9e9e';
   }
