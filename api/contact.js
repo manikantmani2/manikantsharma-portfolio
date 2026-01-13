@@ -30,8 +30,7 @@ module.exports = async function handler(req, res) {
   try {
     // Create transporter using Gmail
     const transporter = nodemailer.createTransport({
-host: 'gmail.com',
-      port: 587,
+host: 'smtp.gmail.com'      port: 587,
       secure: false,
       auth: {
         user: process.env.GMAIL_USER,
