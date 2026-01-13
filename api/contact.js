@@ -1,23 +1,5 @@
-const express = require('express');
-const nodemailer = require('nodemailer');
-const cors = require('cors');
-const path = require('path');
-require('dotenv').config();
+import nodemailer from 'nodemailer';
 
-const app = express();
-const PORT = process.env.PORT || 5173;
-
-// Middleware
-app.use(cors());
-app.use(express.json());
-app.use(express.static(path.join(__dirname)));
-
-// Root route - serve index.html
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
-});
-
-// SMTP Configuration
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
   port: 587,
@@ -31,8 +13,22 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-// Contact form endpoint
-app.post('/api/contact', async (req, res) => {
+export default async (req, res) => {
+  // Enable CORS
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+  res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
+
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
+
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
   const { name, email, phone, message } = req.body;
 
   if (!name || !email || !message) {
@@ -65,35 +61,12 @@ app.post('/api/contact', async (req, res) => {
     console.log('Attempting to send email...');
     const info = await transporter.sendMail(mailOptions);
     console.log('Email sent successfully:', info.messageId);
-    res.json({ success: true, message: 'Email sent successfully!' });
+    res.status(200).json({ success: true, message: 'Email sent successfully!' });
   } catch (error) {
     console.error('Detailed email error:', error);
-    console.error('Error details:', {
-      code: error.code,
-      command: error.command,
-      response: error.response,
-      responseCode: error.responseCode
-    });
     res.status(500).json({ 
       error: 'Failed to send email. Check server console for details.',
       details: error.message 
     });
   }
-});
-
-// Verify SMTP connection on startup
-transporter.verify(function(error, success) {
-  if (error) {
-    console.log('❌ SMTP Configuration Error:', error.message);
-    console.log('Please check your .env file and Gmail app password');
-  } else {
-    console.log('✅ SMTP Server is ready to send emails');
-  }
-});
-
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
-  console.log(`📧 Email configured for: ${process.env.EMAIL_USER || '2200030839cser@gmail.com'}`);
-});
-
-module.exports = app;
+};
