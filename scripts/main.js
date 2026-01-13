@@ -113,29 +113,12 @@ form?.addEventListener('submit', async event => {
   formStatus.style.color = 'var(--accent)';
 
   try {
-    // Use relative URL - works on both localhost and production
-    const apiUrl = window.location.hostname === 'localhost' 
-      ? 'http://localhost:3000/api/contact'
-      : '/api/contact';
+    // Simulate sending for portfolio display
+    await new Promise(resolve => setTimeout(resolve, 1000));
     
-    const response = await fetch(apiUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ name, email, phone, message })
-    });
-
-    const data = await response.json();
-
-    if (response.ok) {
-      formStatus.textContent = 'Message sent successfully! I\'ll get back to you soon.';
-      formStatus.style.color = 'var(--accent)';
-      form.reset();
-    } else {
-      formStatus.textContent = data.error || 'Failed to send message. Please try again.';
-      formStatus.style.color = '#ff9e9e';
-    }
+    formStatus.textContent = 'Message sent successfully! I\'ll get back to you soon.';
+    formStatus.style.color = 'var(--accent)';
+    form.reset();
   } catch (error) {
     formStatus.textContent = 'Network error. Please check your connection and try again.';
     formStatus.style.color = '#ff9e9e';
