@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "dev": "node local-server.js",
     "build": "echo 'Static site'",
-    "dev": "echo 'Static site'",
-    "start": "echo 'Static site'"
+    "start": "echo 'Static site production'"
   }
 }
