@@ -51,3 +51,5 @@ coverage/
 
 # Package manager files (lock files in git for reproducibility)
 # yarn.lock (optional - depends on team preference)
+.vercel
+.env*.local
