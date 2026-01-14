@@ -23,25 +23,26 @@ module.exports = async function handler(req, res) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
-  if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) {
-    return res.status(500).json({ error: 'Email service not configured. Please set GMAIL_USER and GMAIL_APP_PASSWORD.' });
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    return res.status(500).json({ error: 'Email service not configured. Please set EMAIL_USER and EMAIL_PASS environment variables.' });
   }
 
   try {
-    // Create transporter using Gmail
+    // Create transporter using Gmail SMTP
     const transporter = nodemailer.createTransport({
-host: 'smtp.gmail.com',      port: 587,
-      secure: false,
+      host: 'smtp.gmail.com',
+      port: 587,
+      secure: false, // Use TLS
       auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_APP_PASSWORD
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
       }
     });
 
     // Email to send to your inbox
     const mailOptions = {
-      from: process.env.GMAIL_USER,
-      to: process.env.GMAIL_USER, // Send to your email
+      from: process.env.EMAIL_USER,
+      to: process.env.EMAIL_USER, // Send to your email
       subject: `New Contact Form Submission from ${name}`,
       html: `
         <h2>New Contact Form Submission</h2>
